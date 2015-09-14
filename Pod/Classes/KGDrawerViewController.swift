@@ -239,6 +239,15 @@ public class KGDrawerViewController: UIViewController {
         }
     }
     
+    public var backgroundColor: UIColor? {
+        get {
+            return drawerView.backgroundColor
+        }
+        set {
+            drawerView.backgroundColor = newValue
+        }
+    }
+    
     // MARK: Status Bar
     
     override public func childViewControllerForStatusBarHidden() -> UIViewController? {
