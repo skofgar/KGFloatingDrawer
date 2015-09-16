@@ -18,19 +18,20 @@ public class KGDrawerSpringAnimator: NSObject {
     public var springDamping: CGFloat                = 0.8
     
     // TODO: can swift have private functions in a protocol?
-    private func applyTransforms(side: KGDrawerSide, drawerView: UIView, centerView: UIView) {
+    private func applyTransforms(side: KGDrawerSide, drawerView: UIView, centerView: UIView, animationCompletion: CGFloat) {
         
         let direction = side.rawValue
         let sideWidth = CGRectGetWidth(drawerView.bounds)
         let centerWidth = CGRectGetWidth(centerView.bounds)
-        let centerHorizontalOffset = direction * sideWidth
-        let scaledCenterViewHorizontalOffset = direction * (sideWidth - (centerWidth - kKGCenterViewDestinationScale * centerWidth) / 2.0)
+        let centerHorizontalOffset = animationCompletion * direction * sideWidth
+        let scaledCenterViewHorizontalOffset = animationCompletion * direction * (sideWidth - (centerWidth - kKGCenterViewDestinationScale * centerWidth) / 2.0)
         
         let sideTransform = CGAffineTransformMakeTranslation(centerHorizontalOffset, 0.0)
         drawerView.transform = sideTransform
         
         let centerTranslate = CGAffineTransformMakeTranslation(scaledCenterViewHorizontalOffset, 0.0)
-        let centerScale = CGAffineTransformMakeScale(kKGCenterViewDestinationScale, kKGCenterViewDestinationScale)
+        let scaleFactor = CGFloat(1) * (CGFloat(1) - animationCompletion) + kKGCenterViewDestinationScale * ( animationCompletion)
+        let centerScale = CGAffineTransformMakeScale(scaleFactor, scaleFactor)
         centerView.transform = CGAffineTransformConcat(centerScale, centerTranslate)
         
     }
@@ -53,11 +54,27 @@ extension KGDrawerSpringAnimator: KGDrawerAnimating {
                 initialSpringVelocity: initialSpringVelocity,
                 options: UIViewAnimationOptions.CurveLinear,
                 animations: {
-                    self.applyTransforms(side, drawerView: drawerView, centerView: centerView)
+                    self.applyTransforms(side, drawerView: drawerView, centerView: centerView, animationCompletion: CGFloat(1))
                     
                 }, completion: complete)
         } else {
-            self.applyTransforms(side, drawerView: drawerView, centerView: centerView)
+            self.applyTransforms(side, drawerView: drawerView, centerView: centerView, animationCompletion: CGFloat(1))
+        }
+    }
+    
+    public func drawerAnimation(side: KGDrawerSide, drawerView: UIView, centerView: UIView, animated: Bool, animationCompletion: CGFloat, complete: (finished: Bool) -> Void) {
+        if (animated) {
+            UIView.animateWithDuration(animationDuration,
+                delay: animationDelay,
+                usingSpringWithDamping: springDamping,
+                initialSpringVelocity: initialSpringVelocity,
+                options: UIViewAnimationOptions.CurveLinear,
+                animations: {
+                    self.applyTransforms(side, drawerView: drawerView, centerView: centerView, animationCompletion: animationCompletion)
+                    
+                }, completion: complete)
+        } else {
+            self.applyTransforms(side, drawerView: drawerView, centerView: centerView, animationCompletion: animationCompletion)
         }
     }
     

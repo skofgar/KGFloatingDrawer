@@ -82,6 +82,20 @@ public class KGDrawerViewController: UIViewController {
         currentlyOpenedSide = side
     }
     
+    public func animateDrawer(side: KGDrawerSide, animated:Bool, animationCompletion: CGFloat, complete: (finished: Bool) -> Void) {
+        if let sideView = drawerView.viewContainerForDrawerSide(side) {
+            let centerView = drawerView.centerViewContainer
+            
+            self.animator.drawerAnimation(side, drawerView: sideView, centerView: centerView, animated: animated, animationCompletion: animationCompletion, complete: complete)
+            
+            addDrawerGestures()
+            drawerView.willOpenDrawer(self)
+            
+        }
+        
+        currentlyOpenedSide = side
+    }
+    
     public func closeDrawer(side: KGDrawerSide, animated: Bool, complete: (finished: Bool) -> Void) {
         if (currentlyOpenedSide == side && currentlyOpenedSide != .None) {
             if let sideView = drawerView.viewContainerForDrawerSide(side) {
@@ -109,16 +123,41 @@ public class KGDrawerViewController: UIViewController {
     func addDrawerGestures() {
         centerViewController?.view.userInteractionEnabled = false
         drawerView.centerViewContainer.addGestureRecognizer(toggleDrawerTapGestureRecognizer)
+        drawerView.centerViewContainer.addGestureRecognizer(toggleDrawerPanGestureRecognizer)
     }
     
     func restoreGestures() {
         drawerView.centerViewContainer.removeGestureRecognizer(toggleDrawerTapGestureRecognizer)
+        drawerView.centerViewContainer.removeGestureRecognizer(toggleDrawerPanGestureRecognizer)
         centerViewController?.view.userInteractionEnabled = true
     }
     
     func centerViewContainerTapped(sender: AnyObject) {
         closeDrawer(currentlyOpenedSide, animated: true) { (finished) -> Void in
             // Do nothing
+        }
+    }
+    
+    func centerViewContainerDragged(sender: AnyObject) {
+        
+        var animationCompletion: CGFloat // = CGFloat(0.5)
+        if (sender.isKindOfClass(UIPanGestureRecognizer)) {
+            let recognizer = sender as! UIPanGestureRecognizer
+            
+            if (.Began == recognizer.state || .Changed == recognizer.state)
+            {
+                let point:CGPoint = recognizer.locationOfTouch(0, inView:self.view!) //location(recognizer.view)
+                
+                //CGPoint point = [touch locationInView:gestureRecognizer.view];
+                animationCompletion =  fabs(point.x) / self.view!.frame.size.width //-self.view!.frame.size.width
+                print("%: \(animationCompletion), x: \(point.y), width: \(recognizer.view!.frame.size.width)")
+                
+                animateDrawer(currentlyOpenedSide, animated: true, animationCompletion: animationCompletion) { (finished) -> Void in
+                    // Do nothing
+                }
+            } else if (.Ended == recognizer.state) {
+                print("blubb")
+            }
         }
     }
     
@@ -197,6 +236,14 @@ public class KGDrawerViewController: UIViewController {
     private lazy var toggleDrawerTapGestureRecognizer: UITapGestureRecognizer = {
         [unowned self] in
         let gesture = UITapGestureRecognizer(target: self, action: "centerViewContainerTapped:")
+        return gesture
+    }()
+    
+    private lazy var toggleDrawerPanGestureRecognizer: UIPanGestureRecognizer = {
+        [unowned self] in
+        let gesture = UIPanGestureRecognizer(target: self, action: "centerViewContainerDragged:")
+        gesture.minimumNumberOfTouches = 1
+        gesture.maximumNumberOfTouches = 1
         return gesture
     }()
     
