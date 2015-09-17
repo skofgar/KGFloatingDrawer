@@ -138,17 +138,22 @@ public class KGDrawerViewController: UIViewController {
         }
     }
     
+    var previousPoint:CGPoint?
+    var draggedPointEnd:CGPoint?
     func centerViewContainerDragged(sender: AnyObject) {
         
         var animationCompletion: CGFloat // = CGFloat(0.5)
         if (sender.isKindOfClass(UIPanGestureRecognizer)) {
             let recognizer = sender as! UIPanGestureRecognizer
             
+            
             if (.Began == recognizer.state || .Changed == recognizer.state)
             {
-                let point:CGPoint = recognizer.locationOfTouch(0, inView:self.view!) //location(recognizer.view)
-                
-                //CGPoint point = [touch locationInView:gestureRecognizer.view];
+                let point:CGPoint = recognizer.locationOfTouch(0, inView:self.view!)
+                if (nil != draggedPointEnd) {
+                    previousPoint = draggedPointEnd
+                }
+                draggedPointEnd = recognizer.locationOfTouch(0, inView: self.view!)
                 animationCompletion =  fabs(point.x) / self.view!.frame.size.width //-self.view!.frame.size.width
                 print("%: \(animationCompletion), x: \(point.y), width: \(recognizer.view!.frame.size.width)")
                 
@@ -156,7 +161,16 @@ public class KGDrawerViewController: UIViewController {
                     // Do nothing
                 }
             } else if (.Ended == recognizer.state) {
-                print("blubb")
+                let openSide = (recognizer.view?.frame.origin.x > 0) ? KGDrawerSide.Left : KGDrawerSide.Right
+                if (nil != previousPoint && previousPoint!.x < draggedPointEnd!.x) {
+                    currentlyOpenedSide = KGDrawerSide.None
+                    openDrawer(openSide, animated: true) { (finished) -> Void in
+                    }
+                }
+                if (nil != previousPoint && previousPoint!.x > draggedPointEnd!.x) {
+                    closeDrawer(openSide, animated: true) { (finished) -> Void in
+                    }
+                }
             }
         }
     }
