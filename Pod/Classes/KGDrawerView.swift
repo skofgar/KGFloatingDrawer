@@ -12,7 +12,7 @@ public class KGDrawerView: UIView {
     
     
     let kKGCenterViewContainerCornerRadius: CGFloat = 5.0
-    let kKGDefaultViewContainerWidth: CGFloat = 280.0
+    var kKGDefaultViewContainerWidth = (left: CGFloat(280.0), right: CGFloat(280.0))
 
     // MARK: Initialization
     required public init?(coder aDecoder: NSCoder) {
@@ -21,6 +21,8 @@ public class KGDrawerView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        self.kKGDefaultViewContainerWidth = (frame.width, right: frame.width)
         
         self.addSubview(backgroundImageView)
         self.addSubview(centerViewContainer)
@@ -108,7 +110,7 @@ public class KGDrawerView: UIView {
             if let retVal = _leftViewWidthConstraint {
                 return retVal
             }
-            let retVal = NSLayoutConstraint(item: self.leftViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth)
+            let retVal = NSLayoutConstraint(item: self.leftViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.left)
             _leftViewWidthConstraint = retVal
             return retVal
         }
@@ -151,7 +153,7 @@ public class KGDrawerView: UIView {
             if let constraint = _rightViewWidthConstraint {
                 return constraint
             }
-            let constraint = NSLayoutConstraint(item: self.rightViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth)
+            let constraint = NSLayoutConstraint(item: self.rightViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.right)
             _rightViewWidthConstraint = constraint
             return constraint
         }
