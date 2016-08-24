@@ -35,8 +35,8 @@ public class KGDrawerView: UIView {
         self.addConstraints(rightViewConstraints)
     }
     
-    override public func willMoveToSuperview(newSuperview: UIView?) {
-        self.bringSubviewToFront(self.centerViewContainer)
+    override public func willMove(toSuperview newSuperview: UIView?) {
+        self.bringSubview(toFront: self.centerViewContainer)
     }
     
     override public func layoutSubviews() {
@@ -44,31 +44,31 @@ public class KGDrawerView: UIView {
     }
     
     // MARK: Background Image
-    private var _backgroundImageView: UIImageView?
+    fileprivate var _backgroundImageView: UIImageView?
     var backgroundImageView: UIImageView {
         get {
             if let imageView = _backgroundImageView {
                 return imageView
             }
             let imageView = UIImageView(frame: self.frame)
-            imageView.contentMode = .ScaleAspectFill
+            imageView.contentMode = .scaleAspectFill
             imageView.translatesAutoresizingMaskIntoConstraints = false
             _backgroundImageView = imageView
             return imageView
         }
     }
     
-    private var _backgroundViewConstraints: [NSLayoutConstraint]?
-    private var backgroundViewConstraints: [NSLayoutConstraint] {
+    fileprivate var _backgroundViewConstraints: [NSLayoutConstraint]?
+    fileprivate var backgroundViewConstraints: [NSLayoutConstraint] {
         get {
             if let constraints = _backgroundViewConstraints {
                 return constraints
             }
             let constraints = [
-                NSLayoutConstraint(item: self.backgroundImageView, attribute: .Leading,  relatedBy: .Equal, toItem: self, attribute: .Leading,  multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: self.backgroundImageView, attribute: .Trailing, relatedBy: .Equal, toItem: self, attribute: .Trailing, multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: self.backgroundImageView, attribute: .Top,      relatedBy: .Equal, toItem: self, attribute: .Top,      multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: self.backgroundImageView, attribute: .Bottom,   relatedBy: .Equal, toItem: self, attribute: .Bottom,   multiplier: 1.0, constant: 0.0)
+                NSLayoutConstraint(item: self.backgroundImageView, attribute: .leading,  relatedBy: .equal, toItem: self, attribute: .leading,  multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.backgroundImageView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.backgroundImageView, attribute: .top,      relatedBy: .equal, toItem: self, attribute: .top,      multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.backgroundImageView, attribute: .bottom,   relatedBy: .equal, toItem: self, attribute: .bottom,   multiplier: 1.0, constant: 0.0)
             ]
             _backgroundViewConstraints = constraints
             return constraints
@@ -76,7 +76,7 @@ public class KGDrawerView: UIView {
     }
 
     // MARK: Left view container
-    private var _leftViewContainer: UIView?
+    fileprivate var _leftViewContainer: UIView?
     var leftViewContainer: UIView {
         get {
             if let container = _leftViewContainer {
@@ -89,35 +89,35 @@ public class KGDrawerView: UIView {
         }
     }
     
-    private var _leftViewConstraints: [NSLayoutConstraint]?
-    private var leftViewConstraints: [NSLayoutConstraint] {
+    fileprivate var _leftViewConstraints: [NSLayoutConstraint]?
+    fileprivate var leftViewConstraints: [NSLayoutConstraint] {
         if let constraints = _leftViewConstraints {
             return constraints
         }
         let constraints = [
-            NSLayoutConstraint(item: self.leftViewContainer, attribute: .Height,   relatedBy: .Equal, toItem: self, attribute: .Height,  multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.leftViewContainer, attribute: .Trailing, relatedBy: .Equal, toItem: self, attribute: .Leading, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.leftViewContainer, attribute: .Top,      relatedBy: .Equal, toItem: self, attribute: .Top,     multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.leftViewContainer, attribute: .height,   relatedBy: .equal, toItem: self, attribute: .height,  multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.leftViewContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.leftViewContainer, attribute: .top,      relatedBy: .equal, toItem: self, attribute: .top,     multiplier: 1.0, constant: 0.0),
             self.leftViewWidthConstraint
         ]
         _leftViewConstraints = constraints
         return constraints
     }
     
-    private var _leftViewWidthConstraint: NSLayoutConstraint?
-    private var leftViewWidthConstraint: NSLayoutConstraint {
+    fileprivate var _leftViewWidthConstraint: NSLayoutConstraint?
+    fileprivate var leftViewWidthConstraint: NSLayoutConstraint {
         get {
             if let retVal = _leftViewWidthConstraint {
                 return retVal
             }
-            let retVal = NSLayoutConstraint(item: self.leftViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.left)
+            let retVal = NSLayoutConstraint(item: self.leftViewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.left)
             _leftViewWidthConstraint = retVal
             return retVal
         }
     }
     
     // MARK: Right view container
-    private var _rightViewContainer: UIView?
+    fileprivate var _rightViewContainer: UIView?
     var rightViewContainer: UIView {
         get {
             if let retVal = _rightViewContainer {
@@ -130,16 +130,16 @@ public class KGDrawerView: UIView {
         }
     }
     
-    private var _rightViewConstraints: [NSLayoutConstraint]?
-    private var rightViewConstraints: [NSLayoutConstraint] {
+    fileprivate var _rightViewConstraints: [NSLayoutConstraint]?
+    fileprivate var rightViewConstraints: [NSLayoutConstraint] {
         get {
             if let constraints = _rightViewConstraints {
                 return constraints
             }
             let constraints = [
-                NSLayoutConstraint(item: self.rightViewContainer, attribute: .Height,  relatedBy: .Equal, toItem: self, attribute: .Height,   multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: self.rightViewContainer, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Trailing, multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: self.rightViewContainer, attribute: .Top,     relatedBy: .Equal, toItem: self, attribute: .Top,      multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.rightViewContainer, attribute: .height,  relatedBy: .equal, toItem: self, attribute: .height,   multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.rightViewContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: self.rightViewContainer, attribute: .top,     relatedBy: .equal, toItem: self, attribute: .top,      multiplier: 1.0, constant: 0.0),
                 self.rightViewWidthConstraint
             ]
             _rightViewConstraints = constraints
@@ -147,20 +147,20 @@ public class KGDrawerView: UIView {
         }
     }
     
-    private var _rightViewWidthConstraint: NSLayoutConstraint?
-    private var rightViewWidthConstraint: NSLayoutConstraint {
+    fileprivate var _rightViewWidthConstraint: NSLayoutConstraint?
+    fileprivate var rightViewWidthConstraint: NSLayoutConstraint {
         get {
             if let constraint = _rightViewWidthConstraint {
                 return constraint
             }
-            let constraint = NSLayoutConstraint(item: self.rightViewContainer, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.right)
+            let constraint = NSLayoutConstraint(item: self.rightViewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: self.kKGDefaultViewContainerWidth.right)
             _rightViewWidthConstraint = constraint
             return constraint
         }
     }
     
     // MARK: Center view container
-    private var _centerViewContainer: UIView?
+    fileprivate var _centerViewContainer: UIView?
     var centerViewContainer: UIView {
         get {
             if let container = _centerViewContainer {
@@ -173,16 +173,16 @@ public class KGDrawerView: UIView {
         }
     }
     
-    private var _centerViewConstraints: [NSLayoutConstraint]?
-    private var centerViewConstraints: [NSLayoutConstraint] {
+    fileprivate var _centerViewConstraints: [NSLayoutConstraint]?
+    fileprivate var centerViewConstraints: [NSLayoutConstraint] {
         if let constraints = _centerViewConstraints {
             return constraints
         }
         let constraints = [
-            NSLayoutConstraint(item: self.centerViewContainer, attribute: .Leading,  relatedBy: .Equal, toItem: self, attribute: .Leading,  multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.centerViewContainer, attribute: .Trailing, relatedBy: .Equal, toItem: self, attribute: .Trailing, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.centerViewContainer, attribute: .Top,      relatedBy: .Equal, toItem: self, attribute: .Top,      multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.centerViewContainer, attribute: .Bottom,   relatedBy: .Equal, toItem: self, attribute: .Bottom,   multiplier: 1.0, constant: 0.0)
+            NSLayoutConstraint(item: self.centerViewContainer, attribute: .leading,  relatedBy: .equal, toItem: self, attribute: .leading,  multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.centerViewContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.centerViewContainer, attribute: .top,      relatedBy: .equal, toItem: self, attribute: .top,      multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.centerViewContainer, attribute: .bottom,   relatedBy: .equal, toItem: self, attribute: .bottom,   multiplier: 1.0, constant: 0.0)
         ]
         _centerViewConstraints = constraints
         return constraints
@@ -208,7 +208,7 @@ public class KGDrawerView: UIView {
     }
     
     // TODO: Make the various properties here configurable by the user.
-    private var _shouldRadiusCenterViewController: Bool = false
+    fileprivate var _shouldRadiusCenterViewController: Bool = false
     var shouldRadiusCenterViewController: Bool {
         get {
             return _shouldRadiusCenterViewController
@@ -216,12 +216,12 @@ public class KGDrawerView: UIView {
         set {
             let view: UIView = self.centerViewContainer.subviews.first!
             if (newValue) {
-                view.layer.borderColor   = UIColor(white: 1.0, alpha: 0.15).CGColor
+                view.layer.borderColor   = UIColor(white: 1.0, alpha: 0.15).cgColor
                 view.layer.borderWidth   = 1.0
                 view.layer.masksToBounds = true
                 view.layer.cornerRadius  = kKGCenterViewContainerCornerRadius
             } else {
-                view.layer.borderColor   = UIColor.clearColor().CGColor
+                view.layer.borderColor   = UIColor.clear.cgColor
                 view.layer.borderWidth   = 0.0
                 view.layer.masksToBounds = false
                 view.layer.cornerRadius  = 0.0
@@ -231,7 +231,7 @@ public class KGDrawerView: UIView {
     }
     
     // TODO: Make the various properties here configurable by the user.
-    private var _shouldShadowCenterViewContainer: Bool?
+    fileprivate var _shouldShadowCenterViewContainer: Bool?
     var shouldShadowCenterViewContainer: Bool {
         get {
             if let retVal = _shouldShadowCenterViewContainer {
@@ -244,18 +244,18 @@ public class KGDrawerView: UIView {
             let layer = self.centerViewContainer.layer
             if (newValue) {
                 layer.shadowRadius  = 20.0
-                layer.shadowColor   = UIColor.blackColor().CGColor
+                layer.shadowColor   = UIColor.black.cgColor
                 layer.shadowOpacity = 0.4
-                layer.shadowOffset  = CGSizeMake(0.0, 0.0)
+                layer.shadowOffset  = CGSize(width: 0.0, height: 0.0)
                 layer.masksToBounds = false
                 
                 self.updateShadowPath()
                 
             } else {
                 layer.shadowRadius  = 0.0
-                layer.shadowColor   = UIColor.clearColor().CGColor
+                layer.shadowColor   = UIColor.clear.cgColor
                 layer.shadowOpacity = 0.0
-                layer.shadowOffset  = CGSizeMake(0.0, 0.0)
+                layer.shadowOffset  = CGSize(width: 0.0, height: 0.0)
                 layer.masksToBounds = true
             }
             _shouldShadowCenterViewContainer = newValue
@@ -274,17 +274,17 @@ public class KGDrawerView: UIView {
         rect.size.width += increase * 2.0
         rect.size.height += increase * 2.0
         
-        layer.shadowPath = UIBezierPath(roundedRect: rect, cornerRadius: kKGCenterViewContainerCornerRadius).CGPath
+        layer.shadowPath = UIBezierPath(roundedRect: rect, cornerRadius: kKGCenterViewContainerCornerRadius).cgPath
     }
     
     func viewContainerForDrawerSide(drawerSide: KGDrawerSide) -> UIView? {
         var viewContainer: UIView?
         switch drawerSide {
-            case .Left:
+            case .left:
                 viewContainer = self.leftViewContainer
-            case .Right:
+            case .right:
                 viewContainer = self.rightViewContainer
-            case .None:
+            case .none:
                 viewContainer = nil
         }
         return viewContainer
