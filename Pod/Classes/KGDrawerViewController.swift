@@ -23,7 +23,7 @@ open class KGDrawerViewController: UIViewController {
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -68,7 +68,7 @@ open class KGDrawerViewController: UIViewController {
                 let centerView = drawerView.centerViewContainer
                 if currentlyOpenedSide != .none {
                     closeDrawer(side: side, animated: animated) { finished in
-                            self.animator.openDrawer(side: side, drawerView: sideView, centerView: centerView, animated: animated, complete: complete)
+                        self.animator.openDrawer(side: side, drawerView: sideView, centerView: centerView, animated: animated, complete: complete)
                     }
                 } else {
                     self.animator.openDrawer(side: side, drawerView: sideView, centerView: centerView, animated: animated, complete: complete)
@@ -142,12 +142,9 @@ open class KGDrawerViewController: UIViewController {
     var draggedPointEnd:CGPoint?
     func centerViewContainerDragged(sender: AnyObject) {
         
-        var animationCompletion: CGFloat // = CGFloat(0.5)
         if sender is UIPanGestureRecognizer {
-        //if (sender.isKind(of: UIPanGestureRecognizer)) {
             let recognizer = sender as! UIPanGestureRecognizer
-            
-            
+
             if (.began == recognizer.state || .changed == recognizer.state)
             {
                 let point:CGPoint = recognizer.location(ofTouch: 0, in:self.view!)
@@ -155,23 +152,40 @@ open class KGDrawerViewController: UIViewController {
                     previousPoint = draggedPointEnd
                 }
                 draggedPointEnd = recognizer.location(ofTouch: 0, in: self.view!)
-                animationCompletion =  fabs(point.x) / self.view!.frame.size.width //-self.view!.frame.size.width
-                print("%: \(animationCompletion), x: \(point.y), width: \(recognizer.view!.frame.size.width)")
+                var animationCompletion = computeAnimationCompletion(point: point)
+                #if DEBUG
+                    print("%: \(animationCompletion), x: \(point.y), width: \(recognizer.view!.frame.size.width)")
+                #endif
                 
                 animateDrawer(side: currentlyOpenedSide, animated: true, animationCompletion: animationCompletion) { (finished) -> Void in
                     // Do nothing
                 }
             } else if (.ended == recognizer.state) {
-                let openSide = ((recognizer.view?.frame.origin.x)! > CGFloat(0)) ? KGDrawerSide.left : KGDrawerSide.right
-                if (nil != previousPoint && previousPoint!.x < draggedPointEnd!.x) {
-                    currentlyOpenedSide = KGDrawerSide.none
-                    openDrawer(side: openSide, animated: true) { (finished) -> Void in
-                    }
+                if (nil != previousPoint) {
+                    finishDrawerInteraction(isSwipeDirectionRight: (previousPoint!.x < draggedPointEnd!.x))
                 }
-                if (nil != previousPoint && previousPoint!.x > draggedPointEnd!.x) {
-                    closeDrawer(side: openSide, animated: true) { (finished) -> Void in
-                    }
-                }
+            }
+        }
+    }
+    
+    func computeAnimationCompletion(point: CGPoint) -> CGFloat {
+        if (currentlyOpenedSide == .left) {
+            return fabs(point.x) / self.view!.frame.size.width
+        } else if (currentlyOpenedSide == .right) {
+            return fabs(self.view!.frame.size.width-point.x) / self.view!.frame.size.width
+        } else {
+            return 1
+        }
+    }
+    
+    func finishDrawerInteraction(isSwipeDirectionRight: Bool) {
+        if ((isSwipeDirectionRight && currentlyOpenedSide == .left) || (!isSwipeDirectionRight && currentlyOpenedSide == .right)) {
+            let openSide = currentlyOpenedSide
+            currentlyOpenedSide = KGDrawerSide.none
+            openDrawer(side: openSide, animated: true) { (finished) -> Void in
+            }
+        } else {
+            closeDrawer(side: currentlyOpenedSide, animated: true) { (finished) -> Void in
             }
         }
     }
