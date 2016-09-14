@@ -85,7 +85,7 @@ open class KGDrawerViewController: UIViewController {
                 drawerView.willOpenDrawer(viewController: self)
             }
         }
-        
+        centerViewController?.view.isUserInteractionEnabled = false
         currentlyOpenedSide = side
     }
     
@@ -113,6 +113,7 @@ open class KGDrawerViewController: UIViewController {
                 drawerView.willCloseDrawer(viewController: self)
             }
         }
+        centerViewController?.view.isUserInteractionEnabled = true
     }
     
     public func toggleDrawer(side: KGDrawerSide, animated: Bool, complete: @escaping (_ finished: Bool) -> Void) {
@@ -132,7 +133,6 @@ open class KGDrawerViewController: UIViewController {
     }
     
     func addDrawerGestures() {
-        centerViewController?.view.isUserInteractionEnabled = false
         drawerView.centerViewContainer.addGestureRecognizer(toggleDrawerTapGestureRecognizer)
         if (!self.openDrawerOnSwipe) {
             addDrawerPanGestures()
@@ -148,7 +148,6 @@ open class KGDrawerViewController: UIViewController {
         if (!self.openDrawerOnSwipe) {
             restorePanGestures()
         }
-        centerViewController?.view.isUserInteractionEnabled = true
     }
     
     func centerViewContainerTapped(sender: AnyObject) {
@@ -212,7 +211,6 @@ open class KGDrawerViewController: UIViewController {
             
             if (.began == recognizer.state || .changed == recognizer.state)
             {
-                centerViewController?.view.isUserInteractionEnabled = false
                 if (currentlyOpenedSide == .none) {
                     let side = shouldOpenDrawerSide(recognizer)
                     if (side == .none) {
@@ -231,7 +229,6 @@ open class KGDrawerViewController: UIViewController {
                 if (nil != previousPoint) {
                     finishDrawerInteraction(isSwipeDirectionRight: (previousPoint!.x < draggedPointEnd!.x))
                 }
-                centerViewController?.view.isUserInteractionEnabled = true
             }
         }
     }
