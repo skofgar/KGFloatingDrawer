@@ -19,6 +19,7 @@ open class KGDrawerViewController: UIViewController {
     public var swipeToOpenSpeedMinimalThreshold:CGFloat      = 460
     public var swipeToOpenDistanceFromWindowEdge:CGFloat     = 70
     public var swipeListenerIfNoDrawerAction: ((UIPanGestureRecognizer) -> ())? = nil
+    public var swipeSupportedDrawerSides: [KGDrawerSide] = [.left, .right]
     let defaultDuration:TimeInterval = 0.3
     private var openDrawerOnSwipe = false
     private var previousPoint:CGPoint?
@@ -171,19 +172,23 @@ open class KGDrawerViewController: UIViewController {
     }
     
     func shouldOpenDrawerSide(_ recognizer: UIPanGestureRecognizer) -> KGDrawerSide {
-        if let window = UIApplication.shared.delegate?.window {
-            let velocityPoint = recognizer.velocity(in: self.view)
-            let location = recognizer.location(in: window)
-            let width = window!.frame.width
-            
-            let drawerSide = (velocityPoint.x > 0.0) ? KGDrawerSide.left : KGDrawerSide.right
-            let boundaryDistance = (drawerSide == .left) ? location.x : abs(width-location.x)
-            
-            return (abs(velocityPoint.x) > swipeToOpenSpeedMinimalThreshold && boundaryDistance < swipeToOpenDistanceFromWindowEdge) ? drawerSide : KGDrawerSide.none
+        let velocityPoint = recognizer.velocity(in: self.view)
+        let drawerSide = (velocityPoint.x > 0.0) ? KGDrawerSide.left : KGDrawerSide.right
+        
+        if (self.swipeSupportedDrawerSides.contains(drawerSide)) {
+            if let window = UIApplication.shared.delegate?.window {
+                
+                let location = recognizer.location(in: window)
+                let width = window!.frame.width
+                
+                let boundaryDistance = (drawerSide == .left) ? location.x : abs(width-location.x)
+                
+                return (abs(velocityPoint.x) > swipeToOpenSpeedMinimalThreshold && boundaryDistance < swipeToOpenDistanceFromWindowEdge) ? drawerSide : KGDrawerSide.none
+            }
         }
         return KGDrawerSide.none
     }
-
+    
     func updateCenterViewControllerPosition(recognizer: UIPanGestureRecognizer) {
         let point:CGPoint = recognizer.location(ofTouch: 0, in:self.view!)
         if (nil != draggedPointEnd) {
@@ -204,7 +209,7 @@ open class KGDrawerViewController: UIViewController {
         
         if sender is UIPanGestureRecognizer {
             let recognizer = sender as! UIPanGestureRecognizer
-
+            
             if (.began == recognizer.state || .changed == recognizer.state)
             {
                 centerViewController?.view.isUserInteractionEnabled = false
