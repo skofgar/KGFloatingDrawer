@@ -18,6 +18,7 @@ open class KGDrawerViewController: UIViewController {
     
     public var swipeToOpenSpeedMinimalThreshold:CGFloat      = 460
     public var swipeToOpenDistanceFromWindowEdge:CGFloat     = 70
+    public var swipeListenerIfNoDrawerAction: ((UIPanGestureRecognizer) -> ())? = nil
     let defaultDuration:TimeInterval = 0.3
     private var openDrawerOnSwipe = false
     private var previousPoint:CGPoint?
@@ -169,7 +170,7 @@ open class KGDrawerViewController: UIViewController {
         }
     }
     
-    func openDrawerBySwipe(recognizer: UIPanGestureRecognizer) {
+    func shouldOpenDrawerSide(_ recognizer: UIPanGestureRecognizer) -> KGDrawerSide {
         if let window = UIApplication.shared.delegate?.window {
             let velocityPoint = recognizer.velocity(in: self.view)
             let location = recognizer.location(in: window)
@@ -178,12 +179,9 @@ open class KGDrawerViewController: UIViewController {
             let drawerSide = (velocityPoint.x > 0.0) ? KGDrawerSide.left : KGDrawerSide.right
             let boundaryDistance = (drawerSide == .left) ? location.x : abs(width-location.x)
             
-            if (abs(velocityPoint.x) > swipeToOpenSpeedMinimalThreshold && boundaryDistance < swipeToOpenDistanceFromWindowEdge) {
-                animateDrawer(side: drawerSide, animated: true, animationCompletion: 0.1) { (finished) -> Void in
-                    // Do nothing
-                }
-            }
+            return (abs(velocityPoint.x) > swipeToOpenSpeedMinimalThreshold && boundaryDistance < swipeToOpenDistanceFromWindowEdge) ? drawerSide : KGDrawerSide.none
         }
+        return KGDrawerSide.none
     }
 
     func updateCenterViewControllerPosition(recognizer: UIPanGestureRecognizer) {
@@ -211,7 +209,16 @@ open class KGDrawerViewController: UIViewController {
             {
                 centerViewController?.view.isUserInteractionEnabled = false
                 if (currentlyOpenedSide == .none) {
-                    openDrawerBySwipe(recognizer: recognizer)
+                    let side = shouldOpenDrawerSide(recognizer)
+                    if (side == .none) {
+                        if let action = self.swipeListenerIfNoDrawerAction {
+                            action(recognizer)
+                        }
+                    } else {
+                        animateDrawer(side: side, animated: true, animationCompletion: 0.1) { (finished) -> Void in
+                            // Do nothing
+                        }
+                    }
                 } else {
                     updateCenterViewControllerPosition(recognizer: recognizer)
                 }
