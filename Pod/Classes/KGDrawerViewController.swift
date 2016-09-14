@@ -53,7 +53,7 @@ open class KGDrawerViewController: UIViewController {
         }
     }
     
-    // TODO: Add ability to supply custom animator.
+    // TODO: check logic here
     
     fileprivate var _animator: KGDrawerSpringAnimator?
     public var animator: KGDrawerSpringAnimator {
@@ -64,6 +64,9 @@ open class KGDrawerViewController: UIViewController {
             let retVal = KGDrawerSpringAnimator()
             _animator = retVal
             return retVal
+        }
+        set(value) {
+            _animator = value
         }
     }
     
