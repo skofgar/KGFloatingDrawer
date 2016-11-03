@@ -196,9 +196,11 @@
 				TargetAttributes = {
 					1F441BEC1AA6A745005772A1 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0800;
 					};
 					1F441C011AA6A745005772A1 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0800;
 						TestTargetID = 1F441BEC1AA6A745005772A1;
 					};
 				};
@@ -422,6 +424,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -434,6 +437,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -452,6 +456,7 @@
 				INFOPLIST_FILE = "KGFloatingDrawer-ExampleTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KGFloatingDrawer-Example.app/KGFloatingDrawer-Example";
 			};
 			name = Debug;
@@ -467,6 +472,7 @@
 				INFOPLIST_FILE = "KGFloatingDrawer-ExampleTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KGFloatingDrawer-Example.app/KGFloatingDrawer-Example";
 			};
 			name = Release;
