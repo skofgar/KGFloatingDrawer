@@ -41,6 +41,7 @@ class KGDrawerSettingsTableViewController: UITableViewController {
         
         if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
             animator = appDelegate.drawerViewController.animator
+            appDelegate.drawerViewController.shouldOpenDrawerOnSwipe = true
             captureDefaultValues(animator!)
             reset()
         }

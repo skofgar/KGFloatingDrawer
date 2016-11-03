@@ -18,7 +18,9 @@ class KGDrawerWebViewViewController: UIViewController {
         // Do any additional setup after loading the view.
         let url: URL = URL(string: "https://github.com/KyleGoddard/KGFloatingDrawer")!
         let request = URLRequest(url: url)
-        
+        if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.drawerViewController.shouldOpenDrawerOnSwipe = false
+        }
         webView.loadRequest(request)
     }
 
