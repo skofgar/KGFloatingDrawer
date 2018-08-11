@@ -90,6 +90,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func drawerSettingsViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(kKGDrawerSettingsViewControllerStoryboardId)
+        setStatusBarBackgroundColor(for: viewController)
         return viewController
     }
     
@@ -120,6 +121,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
     }
     
+    func setStatusBarBackgroundColor(for viewController: UIViewController) {
+        if let navigation = viewController as? UINavigationController {
+            navigation.view.backgroundColor = navigation.navigationBar.barTintColor // navController.navigationBar.backgroundColor ??
+        }
+    }
+    
     fileprivate var _centerViewController: UIViewController?
     var centerViewController: UIViewController {
         get {
@@ -135,9 +142,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     drawerViewController.centerViewController = newValue
                 }
             }
+            setStatusBarBackgroundColor(for: newValue)
             _centerViewController = newValue
         }
     }
-
 }
 
