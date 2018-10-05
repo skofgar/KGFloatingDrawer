@@ -153,7 +153,7 @@ open class KGDrawerViewController: UIViewController {
         }
     }
     
-    func centerViewContainerTapped(sender: AnyObject) {
+    @objc func centerViewContainerTapped(sender: AnyObject) {
         closeDrawer(side: currentlyOpenedSide, animated: true) { (finished) -> Void in
             // Do nothing
         }
@@ -207,7 +207,7 @@ open class KGDrawerViewController: UIViewController {
         }
     }
     
-    func centerViewContainerDragged(sender: AnyObject) {
+    @objc func centerViewContainerDragged(sender: AnyObject) {
         
         if sender is UIPanGestureRecognizer {
             let recognizer = sender as! UIPanGestureRecognizer
